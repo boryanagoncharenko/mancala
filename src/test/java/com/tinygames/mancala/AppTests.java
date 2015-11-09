@@ -1,4 +1,4 @@
-package com.tinygames;
+package com.tinygames.mancala;
 
 import org.junit.Before;
 import org.junit.Test;

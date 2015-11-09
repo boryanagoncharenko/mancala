@@ -4,6 +4,8 @@ __pycache__/
 *.iml
 *$py.class
 .idea/
+target/
+out/
 build/
 dist/
 csscoco.egg-info/

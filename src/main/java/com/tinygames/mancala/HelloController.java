@@ -1,4 +1,4 @@
-package com.tinygames;
+package com.tinygames.mancala;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
