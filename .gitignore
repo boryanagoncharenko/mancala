@@ -1,0 +1,9 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.iml
+*$py.class
+.idea/
+build/
+dist/
+csscoco.egg-info/
