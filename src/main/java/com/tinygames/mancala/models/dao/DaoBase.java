@@ -5,6 +5,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 public abstract class DaoBase
 {
-//    @Autowired
+    @Autowired
     protected RedisTemplate<String, String> template;
 }

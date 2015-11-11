@@ -1,6 +1,8 @@
 package com.tinygames.mancala.models;
 
-public class Game {
+import java.io.Serializable;
+
+public class Game implements Serializable {
     private String id;
     private String host;
     private String guest;

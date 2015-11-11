@@ -2,6 +2,7 @@ package com.tinygames.mancala.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinygames.mancala.models.Game;
+import com.tinygames.mancala.models.dao.GameDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,8 @@ import java.util.UUID;
 @RequestMapping("/games")
 public class GameController {
 
-//    @Autowired
-//    private GameDao dao;
+    @Autowired
+    private GameDao dao;
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public String create() {
@@ -25,7 +26,7 @@ public class GameController {
         Game game = new Game();
         game.setId(uniqueID);
 //        Game game = new Game(uniqueID, user);
-//        this.dao.create(game);
+        this.dao.create(game);
         return "{\"gameID\":\"" + uniqueID + "\"}";
     }
 

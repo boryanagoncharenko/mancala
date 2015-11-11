@@ -16,6 +16,19 @@
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+
+    <bean id="jedisConnFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:usePool="true"/>
+
+    <bean id="stringSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+
+    <bean id="redisTemplate"
+          class="org.springframework.data.redis.core.RedisTemplate" p:connectionFactory-ref="jedisConnFactory">
+        <property name="keySerializer" ref="stringSerializer"/>
+        <property name="valueSerializer" ref="stringSerializer"/>
+        <property name="hashKeySerializer" ref="stringSerializer"/>
+    </bean>
+
     <mvc:annotation-driven />
     <mvc:resources mapping="/js/**" location="/resources/js/" />
 </beans>
