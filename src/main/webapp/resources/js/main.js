@@ -1,6 +1,7 @@
 window.onload = function() {
-    document.getElementById("play-btn").addEventListener("click", function() {
 
+
+    document.getElementById("play-btn").addEventListener("click", function() {
         $.ajax({
             type: "POST",
             url: "http://localhost:8080/games",
