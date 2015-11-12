@@ -8,11 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/games")
 public class GameController {
@@ -23,9 +18,7 @@ public class GameController {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public String create() {
         String uniqueID = UUID.randomUUID().toString();
-        Game game = new Game();
-        game.setId(uniqueID);
-//        Game game = new Game(uniqueID, user);
+        Game game = new Game(uniqueID);
         this.dao.create(game);
         return "{\"gameID\":\"" + uniqueID + "\"}";
     }
@@ -46,9 +39,9 @@ public class GameController {
 //
 //    }
 //
-//    @RequestMapping(value = "/{id}/move", method = RequestMethod.POST)
-//    public void move(@PathVariable String id, @RequestParam("user") String user, @RequestParam("hole") int hole) {
-//
-//    }
+    @RequestMapping(value = "/{id}/move", method = RequestMethod.POST)
+    public void move(@PathVariable String id, @RequestParam("user") String user, @RequestParam("pit") int hole) {
+
+    }
 
 }
