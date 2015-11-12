@@ -19,13 +19,21 @@ public class GameController {
         String uniqueID = UUID.randomUUID().toString();
         Game game = new Game(uniqueID);
         this.dao.create(game);
-        return "{\"gameID\":\"" + uniqueID + "\"}";
+        return Helpers.buildJson("gameID", uniqueID);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public void assignUser(@PathVariable String userId) {
-        // check if the user can be assigned to the game
-        // return if it is successful
+    @RequestMapping(value = "/{gameID}/add/{userID}", method = RequestMethod.POST, produces = "application/json")
+    public Game addUser(@PathVariable String gameID, @PathVariable String userID) {
+        Game game = this.dao.retrieve(gameID);
+        if (game.getHost() == null) {
+            game.setHost(userID);
+        }
+        else if (game.getGuest() == null && !game.getHost().equals(userID)) {
+            game.setGuest(userID);
+        }
+        this.dao.update(game);
+
+        return game;
     }
 
 //    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")

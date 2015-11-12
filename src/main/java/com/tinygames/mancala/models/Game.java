@@ -9,12 +9,13 @@ public class Game implements Serializable {
     private int[] state;
     private String playerInTurn;
 
-    public Game() {
-
-    }
+//    public Game() {
+//        this.state = new int[] {6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0};
+//    }
 
     public Game(String id) {
         this.id = id;
+        this.state = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
     }
 
     public String getId() {
@@ -31,6 +32,9 @@ public class Game implements Serializable {
 
     public void setHost(String host) {
         this.host = host;
+//        if (this.playerInTurn == null) {
+//            this.playerInTurn = this.host;
+//        }
     }
 
     public String getGuest() {

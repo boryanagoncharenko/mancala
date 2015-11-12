@@ -1,6 +1,6 @@
+var env = "http://localhost:8080/";
 
 $("#play-btn").click(function() {
-    var env = "http://localhost:8080/";
     $.ajax({
         type: "POST",
         url: env + "games",
@@ -18,8 +18,61 @@ $("#play-btn").click(function() {
 });
 
 
-var user_id = mancalaObject["userID"];
-console.log(user_id);
+function updateBoard(game) {
+    var state = getUserGameState(game);
+    var n = 6;
+    for (i = 1; i <= n; i++) {
+        $("#own-pit" + i).text(state[i - 1]);
+        $("#opp-pit" + i).text(state[i + n]);
+    }
+    $("#own-kalah").text(state[n]);
+    $("#opp-kalah").text(state[2 * n + 1]);
+}
+
+function getUserGameState(game) {
+    var state = game["state"];
+    if (game["host"] !== mancalaObject["userID"]) {
+        var offset = 7;
+        for (i = 0; i < offset; i++) {
+            var buf = state[i];
+            state[i] = state[i + offset];
+            state[i + offset] = buf;
+        }
+    }
+    return state;
+}
+
+function loadGame(game) {
+    // visualize game
+    updateBoard(game);
+    if (game["playerInTurn"] !== mancalaObject["userID"]) {
+        // block UI and start pinging for update
+    } else {
+        // unblock UI
+    }
+}
+
+
+if (typeof mancalaObject !== 'undefined') {
+    $.ajax({
+        type: "POST",
+        url: env + "games/" + mancalaObject["gameID"] + "/add/" + mancalaObject["userID"],
+        success: function (result) {
+            console.log(mancalaObject["userID"] + " was added successfully to the game!");
+            console.log(result);
+            loadGame(result);
+
+
+
+        },
+        error: function (result) {
+            $("#error-msg")
+                .text("There was a problem with the request. Please try again later.")
+                .show();
+        }
+    });
+}
+
 
 
 // try to join game -> player1, player2, guest

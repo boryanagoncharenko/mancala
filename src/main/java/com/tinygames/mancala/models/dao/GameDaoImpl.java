@@ -12,7 +12,13 @@ public class GameDaoImpl extends DaoBase implements GameDao {
         this.template.opsForHash().put(OBJECT_KEY, game.getId(), game);
     }
 
+    @Override
     public Game retrieve(String id) {
         return (Game) this.template.opsForHash().get(OBJECT_KEY, id);
+    }
+
+    @Override
+    public void update(Game game) {
+        this.template.opsForHash().put(OBJECT_KEY, game.getId(), game);
     }
 }
