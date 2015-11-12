@@ -1,15 +1,8 @@
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
-</head>
-<body>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<%--make a layout--%>
-
+<t:generic-page>
 	<h1>Play mancala!</h1>
 	<button id="play-btn">Start</button>
 	<div id="error-msg"></div>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-	<script src="/js/main.js"></script>
-</body>
-</html>
+</t:generic-page>

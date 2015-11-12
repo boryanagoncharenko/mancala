@@ -1,6 +1,5 @@
 package com.tinygames.mancala.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tinygames.mancala.models.Game;
 import com.tinygames.mancala.models.dao.GameDao;
 import org.springframework.beans.factory.annotation.Autowired;

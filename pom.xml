@@ -9,6 +9,8 @@
 
     <properties>
         <spring.version>4.1.6.RELEASE</spring.version>
+        <spring-session.version>1.0.2.RELEASE</spring-session.version>
+        <jersey.version>1.19</jersey.version>
     </properties>
 
     <dependencies>
@@ -60,7 +62,7 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
-            <version>1.0.2.RELEASE</version>
+            <version>${spring-session.version}</version>
             <type>pom</type>
         </dependency>
 
@@ -75,6 +77,13 @@
             <artifactId>javax.json</artifactId>
             <version>1.0.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

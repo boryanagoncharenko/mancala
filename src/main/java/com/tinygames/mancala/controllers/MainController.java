@@ -1,6 +1,8 @@
 package com.tinygames.mancala.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,12 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
 @Controller
 @RequestMapping("/")
 public class MainController {
-    @Autowired
-    private UserController userController;
 
     @RequestMapping(method = RequestMethod.GET)
     public String index()
@@ -23,19 +22,34 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping(value = "/{gameId}", method = RequestMethod.GET)
-    public String play(@PathVariable String gameId, ModelMap model, HttpServletRequest req) {
+    @RequestMapping(value = "/{gameID}", method = RequestMethod.GET)
+    public String play(@PathVariable String gameID, ModelMap model, HttpServletRequest req) {
         HttpSession session = req.getSession();
-        String userID = (String) session.getAttribute("userID");
+        String userKey = "userID";
+        String userID = (String) session.getAttribute(userKey);
+
         if (userID == null) {
-            // create request to rest api (/users POST)
-            String id = userController.createUser();
-            // id contains json, parse it and return only the actual id
-            session.setAttribute("userID" , id);
-            model.addAttribute("userID", id);
+            String id = Helpers.jsonFromString(this.requestUserID()).getString(userKey);
+            session.setAttribute(userKey , id);
+            model.addAttribute(userKey, id);
         }
 
-        model.addAttribute("gameID", gameId);
+        model.addAttribute("gameID", gameID);
         return "game";
+    }
+
+    private String requestUserID() {
+        Client client = Client.create();
+        String env = "http://localhost:8080/";
+        WebResource webResource = client.resource(env + "users");
+        ClientResponse response = webResource.accept("application/json")
+                .post(ClientResponse.class);
+
+        if (response.getStatus() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + response.getStatus());
+        }
+
+        return response.getEntity(String.class);
     }
 }
