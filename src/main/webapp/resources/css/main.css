@@ -2,3 +2,7 @@
 #error-msg {
     display: none;
 }
+
+.pit, .own-pit {
+    height: 50px;
+}
