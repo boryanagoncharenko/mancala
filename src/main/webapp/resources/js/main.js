@@ -17,7 +17,6 @@ $("#play-btn").click(function() {
     return false;
 });
 
-
 function updateBoard(game) {
     var state = getUserGameState(game);
     var n = 6;
@@ -43,15 +42,34 @@ function getUserGameState(game) {
 }
 
 function loadGame(game) {
-    // visualize game
     updateBoard(game);
+    updateIsInTurn(game);
+
     if (game["playerInTurn"] !== mancalaObject["userID"]) {
-        // block UI and start pinging for update
+        ping();
     } else {
         // unblock UI
     }
 }
 
+var interval;
+function ping() {
+    interval = setInterval(getGameState, 1000);
+}
+
+function getGameState() {
+    $.get(env + "games/" + mancalaObject["gameID"],
+        function (result) {
+            if (result["playerInTurn"] === mancalaObject["userID"]) {
+                clearInterval(interval);
+                loadGame(result);
+            }
+        });
+}
+
+function updateIsInTurn(game) {
+    mancalaObject["isInTurn"] = game["playerInTurn"] === mancalaObject["userID"];
+}
 
 if (typeof mancalaObject !== 'undefined') {
     $.ajax({
@@ -61,9 +79,7 @@ if (typeof mancalaObject !== 'undefined') {
             console.log(mancalaObject["userID"] + " was added successfully to the game!");
             console.log(result);
             loadGame(result);
-
-
-
+            mancalaObject.hostID = result["host"]
         },
         error: function (result) {
             $("#error-msg")
@@ -73,35 +89,24 @@ if (typeof mancalaObject !== 'undefined') {
     });
 }
 
-
-
-// try to join game -> player1, player2, guest
-// this endpoint returns the Game object
-// set mancalaObject.isInTurn
-
-
 $(".own-pit").click(function (event){
-    //if (!IS_IN_TURN) {
-    //    return false;
-    //}
-    var str = event.toElement.id.slice(-1);
-    var number = parseInt(str);
+    //console.log(mancalaObject["isInTurn"]);
+    if (!mancalaObject["isInTurn"]) {
+        return
+    }
 
-    // if this is the user in turn
-    // make a move
+    var pit = parseInt(event.target.id.slice(-1)) - 1;
+    if (mancalaObject.hostID !== mancalaObject.userID) {
+        pit += 7;
+    }
+    console.log(pit);
 
-    //$.ajax({
-    //    type: "POST",
-    //    url: "http://localhost:8080/games/game_id/",
-    //    success: function (result) {
-    //        window.location = "http://localhost:8080/" + result["gameID"];
-    //    },
-    //    error: function (result) {
-    //        alert("eror");
-    //    }
-    //});
-
-    console.log(number);
+    $.post(env + "games/" + mancalaObject["gameID"] + "/move",
+        {userID: mancalaObject["userID"], pit: pit},
+        function(result){
+            console.log(result);
+            loadGame(result);
+    });
 });
 
 

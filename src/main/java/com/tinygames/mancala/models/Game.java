@@ -15,7 +15,7 @@ public class Game implements Serializable {
 
     public Game(String id) {
         this.id = id;
-        this.state = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+        this.state = new int[] {6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0};
     }
 
     public String getId() {

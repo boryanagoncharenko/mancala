@@ -2,5 +2,6 @@
 mancalaObject = {
     userID: "",
     gameID: "",
-    isInTurn: false
+    isInTurn: false,
+    hostID: ""
 };

@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/check", method = RequestMethod.POST, produces = "application/json")
-    public String checkIfUserExists() {
+    public String retrieveUser() {
         String uniqueID = UUID.randomUUID().toString();
         User user = new User(uniqueID);
 //        Game game = new Game(uniqueID, user);
