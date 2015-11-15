@@ -3,5 +3,6 @@ mancalaObject = {
     userID: "",
     gameID: "",
     isInTurn: false,
-    hostID: ""
+    isHost: false,
+    state: []
 };

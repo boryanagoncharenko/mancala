@@ -17,12 +17,11 @@ public class UserController {
     private UserDao dao;
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public String createUser() {
+    public User createUser() {
         String uniqueID = UUID.randomUUID().toString();
         User user = new User(uniqueID);
         this.dao.create(user);
-
-        return Helpers.buildJson("userID", uniqueID);
+        return user;
     }
 
     @RequestMapping(value = "/check", method = RequestMethod.POST, produces = "application/json")

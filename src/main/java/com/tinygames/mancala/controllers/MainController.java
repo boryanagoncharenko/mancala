@@ -28,11 +28,11 @@ public class MainController {
         String userID = (String) session.getAttribute(userKey);
 
         if (userID == null) {
-            String id = Helpers.jsonFromString(this.requestUserID()).getString(userKey);
-            session.setAttribute(userKey , id);
-            model.addAttribute(userKey, id);
+            userID = Helpers.jsonFromString(this.requestUserID()).getString("id");
+            session.setAttribute(userKey , userID);
         }
 
+        model.addAttribute(userKey, userID);
         model.addAttribute("gameID", gameID);
         return "game";
     }

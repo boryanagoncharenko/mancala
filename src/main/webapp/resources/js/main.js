@@ -3,37 +3,38 @@ var env = "http://localhost:8080/";
 
 var getPit = function(element) {
     var pit = parseInt(element.id.slice(-1)) - 1;
-    if (mancalaObject.hostID !== mancalaObject.userID) {
+    if (!mancalaObject.isHost) {
         pit += 7;
     }
     return pit;
 };
 
-
-function getUserGameState(game) {
-    var state = game["state"];
-    if (game["host"] !== mancalaObject.userID) {
-        var offset = 7;
-        for (i = 0; i < offset; i++) {
-            var buf = state[i];
-            state[i] = state[i + offset];
-            state[i + offset] = buf;
-        }
-    }
-    return state;
-}
-
 var updateGame = function(game) {
-    updateBoard(game);
-    updateIsInTurn(game);
+    updateMancalaObject(game);
+    updateBoard();
 
-    if (mancalaObject.isInTurn) {
+    if (!mancalaObject.isInTurn) {
         getGameState();
     }
 };
 
-var updateBoard = function(game) {
-    var state = getUserGameState(game);
+var getGameState = function() {
+    $.get(env + "games/" + mancalaObject.gameID,
+        function (result) {
+            if (isStateChanged(result.state)) {
+                updateGame(result);
+            } else {
+                setTimeout(getGameState, 1000);
+            }
+        });
+};
+
+var isStateChanged = function(newState) {
+    return newState !== mancalaObject.state;
+};
+
+var updateBoard = function() {
+    var state = getUserGameState();
     var n = $(".own-pit").size();
 
     for (i = 1; i <= n; i++) {
@@ -44,19 +45,23 @@ var updateBoard = function(game) {
     $("#opp-kalah").text(state[2 * n + 1]);
 };
 
-var updateIsInTurn = function(game) {
-    mancalaObject.isInTurn = game.playerInTurn === mancalaObject.userID;
-};
+function getUserGameState() {
+    var state = mancalaObject.state;
+    if (!mancalaObject.isHost) {
+        var offset = 7;
+        for (i = 0; i < offset; i++) {
+            var buf = state[i];
+            state[i] = state[i + offset];
+            state[i + offset] = buf;
+        }
+    }
 
-var getGameState = function() {
-    $.get(env + "games/" + mancalaObject.gameID,
-        function (result) {
-            if (result["playerInTurn"] === mancalaObject.userID) {
-                updateGame(result);
-            } else {
-                setTimeout(getGameState, 1000);
-            }
-        });
+    return state;
+}
+
+var updateMancalaObject = function(game) {
+    mancalaObject.state = game.state;
+    mancalaObject.isInTurn = game.playerInTurn === mancalaObject.userID;
 };
 
 $("#play-btn").click(function() {
@@ -64,7 +69,7 @@ $("#play-btn").click(function() {
         type: "POST",
         url: env + "games",
         success: function (result) {
-            window.location = env + result["gameID"];
+            window.location = env + result.id;
         },
         error: function (result) {
             $("#error-msg")
@@ -95,10 +100,10 @@ if (typeof mancalaObject !== 'undefined') {
         type: "POST",
         url: env + "games/" + mancalaObject.gameID + "/add/" + mancalaObject.userID,
         success: function (result) {
-            console.log(mancalaObject["userID"] + " was added successfully to the game!");
+            console.log(mancalaObject.userID + " was added successfully to the game!");
             console.log(result);
             updateGame(result);
-            mancalaObject.hostID = result["host"]
+            mancalaObject.isHost = mancalaObject.userID == result.host;
         },
         error: function (result) {
             $("#error-msg")

@@ -15,11 +15,11 @@ public class GameController {
     private GameDao dao;
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public String createGame() {
+    public Game createGame() {
         String uniqueID = UUID.randomUUID().toString();
         Game game = new Game(uniqueID);
         this.dao.create(game);
-        return Helpers.buildJson("gameID", uniqueID);
+        return game;
     }
 
     @RequestMapping(value = "/{gameID}", method = RequestMethod.GET)
@@ -60,14 +60,6 @@ public class GameController {
 
         return pit >= 7 && pit <= 12;
     }
-
-    // TODO: handle this in the js file
-//    public int getPitNumber(int pit, String user, Game game) {
-//        if (game.getGuest().equals(user)) {
-//            return pit + 7;
-//        }
-//        return pit;
-//    }
 
     public int distributeStones(int[] board, int pit, int oppKalah) {
         int numberOfStones = board[pit];
