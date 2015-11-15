@@ -17,8 +17,7 @@ import javax.servlet.http.HttpSession;
 public class MainController {
 
     @RequestMapping(method = RequestMethod.GET)
-    public String index()
-    {
+    public String index() {
         return "index";
     }
 

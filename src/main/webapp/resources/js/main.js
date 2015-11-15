@@ -17,7 +17,7 @@ $("#play-btn").click(function() {
     return false;
 });
 
-function updateBoard(game) {
+var updateBoard = function(game) {
     var state = getUserGameState(game);
     var n = 6;
     for (i = 1; i <= n; i++) {
@@ -26,7 +26,7 @@ function updateBoard(game) {
     }
     $("#own-kalah").text(state[n]);
     $("#opp-kalah").text(state[2 * n + 1]);
-}
+};
 
 function getUserGameState(game) {
     var state = game["state"];
