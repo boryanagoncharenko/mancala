@@ -45,7 +45,7 @@ public class GameController {
     @RequestMapping(value = "/{gameID}/move", method = RequestMethod.POST)
     public Game makeMove(@PathVariable String gameID, @RequestParam("userID") String userID, @RequestParam("pit") int pit) {
         Game game = this.dao.retrieve(gameID);
-        if (game.getPlayerInTurn().equals(userID)) {
+        if (game.getPlayerInTurn().equals(userID) && this.isUserAllowedToPlayPit(game, userID, pit)) {
             Game updatedGame = this.executeMove(userID, pit, game);
             this.dao.update(updatedGame);
         }
@@ -53,6 +53,13 @@ public class GameController {
         return game;
     }
 
+    private boolean isUserAllowedToPlayPit(Game game, String userID, int pit) {
+        if (game.getHost().equals(userID)) {
+            return pit >=0 && pit <= 5;
+        }
+
+        return pit >= 7 && pit <= 12;
+    }
 
     // TODO: handle this in the js file
 //    public int getPitNumber(int pit, String user, Game game) {
