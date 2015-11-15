@@ -3,38 +3,51 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <t:generic-page>
-    <p>This is where the game is displayed</p>
+<p>This is where the game is displayed</p>
 
-    <table border="1" cellpadding="1" cellspacing="1" style="width: 500px">
+<div class="board-container">
+    <table id="board">
         <tbody>
         <tr>
-            <td rowspan="2" id="opp-kalah" class="pit">0</td>
-            <td id="opp-pit6" class="pit">6</td>
-            <td id="opp-pit5" class="pit">6</td>
-            <td id="opp-pit4" class="pit">6</td>
-            <td id="opp-pit3" class="pit">6</td>
-            <td id="opp-pit2" class="pit">6</td>
-            <td id="opp-pit1" class="pit">6</td>
-            <td rowspan="2" id="own-kalah" class="pit">0</td>
+            <td rowspan="2">
+                <div class="opp-kalah-container">
+                    <span id="opp-kalah" class="stones-count">0</span>
+                    <span class="kalah"></span>
+                </div>
+            </td>
+            <c:forEach begin="1" end="6" varStatus="loop">
+                <td>
+                    <div>
+                        <span id="opp-pit${7 - loop.index}" class="stones-count">6</span>
+                        <span class="pit"></span>
+                    </div>
+                </td>
+            </c:forEach>
+            <td rowspan="2">
+                <div class="own-kalah-container">
+                    <span class="kalah"></span>
+                    <span id="own-kalah" class="stones-count">0</span>
+                </div>
+            </td>
         </tr>
         <tr>
-            <td id="own-pit1" class="own-pit">6</td>
-            <td id="own-pit2" class="own-pit">6</td>
-            <td id="own-pit3" class="own-pit">6</td>
-            <td id="own-pit4" class="own-pit">6</td>
-            <td id="own-pit5" class="own-pit">6</td>
-            <td id="own-pit6" class="own-pit">6</td>
+            <c:forEach begin="1" end="6" varStatus="loop">
+                <td>
+                    <div>
+                        <span id="own-pit${loop.index}" class="stones-count">6</span>
+                        <span class="own-pit"></span>
+                    </div>
+                </td>
+            </c:forEach>
         </tr>
         </tbody>
     </table>
+</div>
 
+<script src="js/mancala-object.js"></script>
+<script>
+    mancalaObject.userID = "${userID}";
+    mancalaObject.gameID = "${gameID}";
+</script>
 
-    <div style="display: table">
-
-    </div>
-    <script src="js/mancala-object.js"></script>
-    <script>
-        mancalaObject.userID = "${userID}";
-        mancalaObject.gameID = "${gameID}";
-    </script>
 </t:generic-page>

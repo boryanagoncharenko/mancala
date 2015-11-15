@@ -30,7 +30,12 @@ var getGameState = function() {
 };
 
 var isStateChanged = function(newState) {
-    return newState !== mancalaObject.state;
+    for (i = 0; i < newState.length; i++) {
+        if (newState[i] !== mancalaObject.state[i]) {
+            return true;
+        }
+    }
+    return false;
 };
 
 var updateBoard = function() {
@@ -82,13 +87,15 @@ $("#play-btn").click(function() {
 });
 
 $(".own-pit").click(function (event){
-    if (!mancalaObject.isInTurn) {
+    var stones = $(this).siblings(".stones-count")[0];
+    if (!mancalaObject.isInTurn || stones.innerText == 0) {
         return
     }
 
-    var pit = getPit(event.target);
-    $.post(env + "games/" + mancalaObject.gameID + "/move",
-        {userID: mancalaObject.userID, pit: pit},
+    var pit = getPit(stones);
+    // + strings all the time?
+    $.post(env + "games/" + mancalaObject.gameID + "/move/" + pit,
+        {userID: mancalaObject.userID},
         function(result){
             updateGame(result);
     });
@@ -100,8 +107,6 @@ if (typeof mancalaObject !== 'undefined') {
         type: "POST",
         url: env + "games/" + mancalaObject.gameID + "/add/" + mancalaObject.userID,
         success: function (result) {
-            console.log(mancalaObject.userID + " was added successfully to the game!");
-            console.log(result);
             updateGame(result);
             mancalaObject.isHost = mancalaObject.userID == result.host;
         },

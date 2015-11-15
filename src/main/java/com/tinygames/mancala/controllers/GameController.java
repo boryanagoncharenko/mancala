@@ -1,5 +1,8 @@
 package com.tinygames.mancala.controllers;
 
+
+
+import com.sun.xml.internal.ws.util.StringUtils;
 import com.tinygames.mancala.models.Game;
 import com.tinygames.mancala.models.dao.GameDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +25,35 @@ public class GameController {
         return game;
     }
 
-    @RequestMapping(value = "/{gameID}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{gameID}", method = RequestMethod.GET, produces = "application/json")
     public Game retrieveGame(@PathVariable String gameID) {
         return this.dao.retrieve(gameID);
     }
 
     @RequestMapping(value = "/{gameID}/add/{userID}", method = RequestMethod.POST, produces = "application/json")
+    // return "success" = true/false
     public Game addUserToGame(@PathVariable String gameID, @PathVariable String userID) {
         Game game = this.dao.retrieve(gameID);
+        if (game.getHost() != null && game.getGuest() != null) {
+            return game;
+        }
         if (game.getHost() == null) {
             game.setHost(userID);
         }
-        else if (game.getGuest() == null && !game.getHost().equals(userID)) {
+        else if (!game.getHost().equals(userID)) {
             game.setGuest(userID);
+            // TODO: if player is already set, do not update it
             game.setPlayerInTurn(userID);
         }
-        this.dao.update(game);
 
+        this.dao.update(game);
         return game;
     }
 
-    @RequestMapping(value = "/{gameID}/move", method = RequestMethod.POST)
-    public Game makeMove(@PathVariable String gameID, @RequestParam("userID") String userID, @RequestParam("pit") int pit) {
+    @RequestMapping(value = "/{gameID}/move/{pit}", method = RequestMethod.POST, produces = "application/json")
+    public Game makeMove(@PathVariable String gameID, @RequestParam("userID") String userID, @PathVariable int pit) {
         Game game = this.dao.retrieve(gameID);
-        if (game.getPlayerInTurn().equals(userID) && this.isUserAllowedToPlayPit(game, userID, pit)) {
+        if (this.isMoveLegal(game, userID, pit)) {
             Game updatedGame = this.executeMove(userID, pit, game);
             this.dao.update(updatedGame);
         }
@@ -53,28 +61,17 @@ public class GameController {
         return game;
     }
 
-    private boolean isUserAllowedToPlayPit(Game game, String userID, int pit) {
+    private boolean isMoveLegal(Game game, String userID, int pit) {
+        return game.getPlayerInTurn() != null && game.getPlayerInTurn().equals(userID) &&
+               game.getState()[pit] != 0 &&
+               this.isUserAllowedToMovePit(game, userID, pit);
+    }
+
+    private boolean isUserAllowedToMovePit(Game game, String userID, int pit) {
         if (game.getHost().equals(userID)) {
             return pit >=0 && pit <= 5;
         }
-
         return pit >= 7 && pit <= 12;
-    }
-
-    public int distributeStones(int[] board, int pit, int oppKalah) {
-        int numberOfStones = board[pit];
-        board[pit] = 0;
-        int offset = 1;
-        for (int i = 0; i < numberOfStones; i++) {
-            int index = (pit + i + offset) % 14;
-            if (index == oppKalah) {
-                index++;
-                offset++;
-            }
-            board[index]++;
-        }
-        // index of the last pit where a stone was dropped
-        return (pit + numberOfStones + offset - 1) % 14;
     }
 
     public Game executeMove(String user, int pit, Game game) {
@@ -99,6 +96,22 @@ public class GameController {
         return game;
     }
 
+    public int distributeStones(int[] board, int pit, int oppKalah) {
+        int numberOfStones = board[pit];
+        board[pit] = 0;
+        int offset = 1;
+        for (int i = 0; i < numberOfStones; i++) {
+            int index = (pit + i + offset) % 14;
+            if (index == oppKalah) {
+                index++;
+                offset++;
+            }
+            board[index]++;
+        }
+        // index of the last pit where a stone was dropped
+        return (pit + numberOfStones + offset - 1) % 14;
+    }
+
     private int getOwnKalahIndex(String user, Game game) {
         if (game.getHost().equals(user)) {
             return 6;
@@ -113,16 +126,4 @@ public class GameController {
         }
         return host;
     }
-
-//    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "application/json")
-//    public Game get(@PathVariable String id) {
-//        return this.dao.retrieve(id);
-//    }
-//
-//    @RequestMapping(value = "/{id}/add/{user}", method = RequestMethod.POST)
-//    public void addPlayer(@PathVariable String id, @PathVariable String user) {
-//
-//    }
-//
-
 }

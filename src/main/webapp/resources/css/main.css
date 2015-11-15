@@ -6,3 +6,59 @@
 .pit, .own-pit {
     height: 50px;
 }
+
+
+.stones-count {
+    display: block;
+    text-align: center;
+    font-size: large;
+    cursor: default;
+}
+
+.pit, .own-pit, .kalah {
+    text-align: center;
+    width: 100px;
+    height: 100px;
+
+    display: block;
+    vertical-align: middle;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%; /* may require vendor prefixes */
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.own-pit:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.kalah {
+    height: 200px;
+}
+
+.own-kalah-container {
+    margin-top: 25px;
+}
+
+.opp-kalah-container {
+    margin-bottom: 25px;
+}
+
+table, th, td {
+    height: 120px;
+    /*border: 1px solid red;*/
+}
+
+#board {
+    width: 1000px;
+}
+
+.board-container {
+    width: 1020px;
+    padding: 10px;
+    margin: auto;
+    margin-top: 50px;
+    background-image: url("/img/wood-uncut.jpg");
+}

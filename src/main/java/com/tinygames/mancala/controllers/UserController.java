@@ -23,13 +23,4 @@ public class UserController {
         this.dao.create(user);
         return user;
     }
-
-    @RequestMapping(value = "/check", method = RequestMethod.POST, produces = "application/json")
-    public String retrieveUser() {
-        String uniqueID = UUID.randomUUID().toString();
-        User user = new User(uniqueID);
-//        Game game = new Game(uniqueID, user);
-//        this.dao.create(game);
-        return "{\"userID\":\"" + uniqueID + "\"}";
-    }
 }
