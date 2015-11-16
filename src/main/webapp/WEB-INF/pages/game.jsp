@@ -3,10 +3,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <t:generic-page>
-<p>This is where the game is displayed</p>
 
 <div class="board-container">
-    <table id="board">
+<div id="game-status" class="lead">Opponent's turn</div>
+    <table class="board">
         <tbody>
         <tr>
             <td rowspan="2">
@@ -34,8 +34,8 @@
             <c:forEach begin="1" end="6" varStatus="loop">
                 <td>
                     <div>
-                        <span id="own-pit${loop.index}" class="stones-count">6</span>
                         <span class="own-pit"></span>
+                        <span id="own-pit${loop.index}" class="stones-count">6</span>
                     </div>
                 </td>
             </c:forEach>

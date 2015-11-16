@@ -12,6 +12,7 @@ var getPit = function(element) {
 var updateGame = function(game) {
     updateMancalaObject(game);
     updateBoard();
+    updateStatus();
 
     if (!mancalaObject.isInTurn) {
         getGameState();
@@ -24,7 +25,7 @@ var getGameState = function() {
             if (isStateChanged(result.state)) {
                 updateGame(result);
             } else {
-                setTimeout(getGameState, 1000);
+                setTimeout(getGameState, 5000);
             }
         });
 };
@@ -42,16 +43,75 @@ var updateBoard = function() {
     var state = getUserGameState();
     var n = $(".own-pit").size();
 
-    for (i = 1; i <= n; i++) {
-        $("#own-pit" + i).text(state[i - 1]);
-        $("#opp-pit" + i).text(state[i + n]);
+    for (var i = 1; i <= n; i++) {
+        //$("#own-pit" + i).text(state[i - 1]);
+        //$("#opp-pit" + i).text(state[i + n]);
+
+        updateStones("#own-pit" + i, state[i - 1], ".own-pit");
+        updateStones("#opp-pit" + i, state[i + n], ".pit");
     }
-    $("#own-kalah").text(state[n]);
-    $("#opp-kalah").text(state[2 * n + 1]);
+
+    updateStones("#own-kalah", state[n], ".kalah");
+    updateStones("#opp-kalah", state[2 * n + 1], ".kalah");
 };
 
-function getUserGameState() {
-    var state = mancalaObject.state;
+var updateStones = function(pitId, newValue, pitClass) {
+    var stonesCount = $(pitId);
+    $(stonesCount).text(newValue);
+
+    var pit = stonesCount.siblings(pitClass)[0];
+    adjustStones(pit, newValue);
+};
+
+var adjustStones = function(pit, number) {
+    var currentNumber = $(pit).children().length;
+    var action = addStone;
+    if (currentNumber > number) {
+        action = removeStone;
+    }
+    for (var i = 0; i < Math.abs(currentNumber - number); i++) {
+        action(pit);
+    }
+};
+
+var addStone = function(pit) {
+    console.log(pit);
+    var stone = $("<span class=\"stone\"></span>");
+    setStonePositionAndColor(pit, stone);
+    $(pit).append(stone);
+};
+
+var removeStone = function(pit) {
+    $(pit).children()[0].remove();
+};
+
+
+var stoneColors = ["#2ecc71", "#3498db", "#f1c40f", "#e67e22", "#e74c3c", "#9b59b6", "#34495e"];
+
+var setStonePositionAndColor = function(pit, stone) {
+    var height = $(pit).height();
+    var width = $(pit).width();
+    var top = height/4 + getRandomNumber(height/3);
+    var left = width/4 + getRandomNumber(width/3);
+    var color = stoneColors[getRandomNumber(stoneColors.length) - 1];
+
+    $(stone).css({top: top, left: left, background: color});
+};
+
+var getRandomNumber = function(n) {
+    return Math.floor((Math.random() * n) + 1);
+};
+
+var updateStatus = function() {
+    var status = "Opponent's turn";
+    if (mancalaObject.isInTurn === true) {
+        status = "Your turn";
+    }
+    $("#game-status").text(status);
+};
+
+var getUserGameState = function() {
+    var state = mancalaObject.state.slice();
     if (!mancalaObject.isHost) {
         var offset = 7;
         for (i = 0; i < offset; i++) {
@@ -62,7 +122,7 @@ function getUserGameState() {
     }
 
     return state;
-}
+};
 
 var updateMancalaObject = function(game) {
     mancalaObject.state = game.state;
@@ -93,7 +153,6 @@ $(".own-pit").click(function (event){
     }
 
     var pit = getPit(stones);
-    // + strings all the time?
     $.post(env + "games/" + mancalaObject.gameID + "/move/" + pit,
         {userID: mancalaObject.userID},
         function(result){

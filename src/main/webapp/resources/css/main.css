@@ -16,17 +16,16 @@
 }
 
 .pit, .own-pit, .kalah {
+
     text-align: center;
     width: 100px;
     height: 100px;
 
+    position: relative;
     display: block;
     vertical-align: middle;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 50%; /* may require vendor prefixes */
+    margin: 2px auto 2px auto;
+    border-radius: 50%;
     background: rgba(0, 0, 0, 0.2);
 }
 
@@ -51,14 +50,37 @@ table, th, td {
     /*border: 1px solid red;*/
 }
 
-#board {
+.board {
     width: 1000px;
+    background-image: url("/img/wood-uncut.jpg");
 }
 
 .board-container {
     width: 1020px;
     padding: 10px;
-    margin: auto;
     margin-top: 50px;
-    background-image: url("/img/wood-uncut.jpg");
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.play-container {
+    max-width: 500px;
+    margin-top: 50px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#play-btn {
+    display: block;
+    margin: auto;
+}
+
+.stone {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(150, 0, 0, 0.5);
+    width: 20px;
+    height: 20px;
+    /*top: 5px;*/
+    /*left: 10px;*/
 }

@@ -1,8 +1,5 @@
 package com.tinygames.mancala.controllers;
 
-
-
-import com.sun.xml.internal.ws.util.StringUtils;
 import com.tinygames.mancala.models.Game;
 import com.tinygames.mancala.models.dao.GameDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,7 @@ public class GameController {
     }
 
     @RequestMapping(value = "/{gameID}/add/{userID}", method = RequestMethod.POST, produces = "application/json")
-    // return "success" = true/false
+    // TODO: return "success" = true/false
     public Game addUserToGame(@PathVariable String gameID, @PathVariable String userID) {
         Game game = this.dao.retrieve(gameID);
         if (game.getHost() != null && game.getGuest() != null) {
@@ -53,77 +50,13 @@ public class GameController {
     @RequestMapping(value = "/{gameID}/move/{pit}", method = RequestMethod.POST, produces = "application/json")
     public Game makeMove(@PathVariable String gameID, @RequestParam("userID") String userID, @PathVariable int pit) {
         Game game = this.dao.retrieve(gameID);
-        if (this.isMoveLegal(game, userID, pit)) {
-            Game updatedGame = this.executeMove(userID, pit, game);
+        GameRules rules = new GameRules(game);
+        if (rules.isMoveLegal(userID, pit)) {
+            Game updatedGame = rules.executeMove(userID, pit, game);
             this.dao.update(updatedGame);
         }
 
         return game;
     }
 
-    private boolean isMoveLegal(Game game, String userID, int pit) {
-        return game.getPlayerInTurn() != null && game.getPlayerInTurn().equals(userID) &&
-               game.getState()[pit] != 0 &&
-               this.isUserAllowedToMovePit(game, userID, pit);
-    }
-
-    private boolean isUserAllowedToMovePit(Game game, String userID, int pit) {
-        if (game.getHost().equals(userID)) {
-            return pit >=0 && pit <= 5;
-        }
-        return pit >= 7 && pit <= 12;
-    }
-
-    public Game executeMove(String user, int pit, Game game) {
-        int[] board = game.getState();
-        int kalahIndex = this.getOwnKalahIndex(user, game);
-        int opponentKalahIndex = (kalahIndex + 7) % 14;
-        int lastIndex = this.distributeStones(board, pit, opponentKalahIndex);
-        game.setState(board);
-
-        if (lastIndex == kalahIndex) {
-            game.setPlayerInTurn(user);
-            return game;
-        }
-
-        if (board[lastIndex] == 1 && board[12 - lastIndex] > 0) {
-            board[kalahIndex] += board[lastIndex] + board[12 - lastIndex];
-            board[lastIndex] = 0;
-            board[12 - lastIndex] = 0;
-        }
-        game.setPlayerInTurn(this.getOpponentID(user, game));
-
-        return game;
-    }
-
-    public int distributeStones(int[] board, int pit, int oppKalah) {
-        int numberOfStones = board[pit];
-        board[pit] = 0;
-        int offset = 1;
-        for (int i = 0; i < numberOfStones; i++) {
-            int index = (pit + i + offset) % 14;
-            if (index == oppKalah) {
-                index++;
-                offset++;
-            }
-            board[index]++;
-        }
-        // index of the last pit where a stone was dropped
-        return (pit + numberOfStones + offset - 1) % 14;
-    }
-
-    private int getOwnKalahIndex(String user, Game game) {
-        if (game.getHost().equals(user)) {
-            return 6;
-        }
-        return 13;
-    }
-
-    private String getOpponentID(String user, Game game) {
-        String host = game.getHost();
-        if (host.equals(user)) {
-            return game.getGuest();
-        }
-        return host;
-    }
 }

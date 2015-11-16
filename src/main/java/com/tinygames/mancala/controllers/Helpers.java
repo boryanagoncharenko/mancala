@@ -14,11 +14,4 @@ public class Helpers {
 
         return object;
     }
-
-    public static String buildJson(String key, String value) {
-        return Json.createObjectBuilder()
-                .add(key, value)
-                .build()
-                .toString();
-    }
 }

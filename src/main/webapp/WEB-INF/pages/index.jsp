@@ -2,14 +2,11 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <t:generic-page>
-
-	<div class="row">
-		<div class="col-md-1"></div>
-		<div class="col-md-6"></div>
-		<div class="col-md-1"></div>
+	<div class="play-container">
+		<h1 class="text-center">Mancala</h1>
+		<p class="lead text-justify">
+			Mancala is an ancient family of board games. This is a two-row version with 6 pits in each row and 6 stones in each pit. The objective of the game is to capture more stones than your opponent. Capturing is allowed only on opponents stones. The game ends when either side has no stones left.</p>
+		<button id="play-btn" class="btn btn-primary btn-lg">Play</button>
+		<div class="text-center" id="error-msg"></div>
 	</div>
-
-	<h1>Play mancala!</h1>
-	<button id="play-btn">Start</button>
-	<div id="error-msg"></div>
 </t:generic-page>
