@@ -1,6 +1,6 @@
-package com.tinygames.mancala.models.dao;
+package com.tinygames.mancala.repository;
 
-import com.tinygames.mancala.models.Game;
+import com.tinygames.mancala.domain.Game;
 
 public interface GameDao {
     void create(Game game);

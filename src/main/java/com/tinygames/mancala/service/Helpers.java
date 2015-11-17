@@ -1,4 +1,4 @@
-package com.tinygames.mancala.controllers;
+package com.tinygames.mancala.service;
 
 import javax.json.Json;
 import javax.json.JsonObject;

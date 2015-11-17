@@ -1,6 +1,6 @@
-package com.tinygames.mancala.models.dao;
+package com.tinygames.mancala.repository;
 
-import com.tinygames.mancala.models.User;
+import com.tinygames.mancala.domain.User;
 
 public interface UserDao {
     void create(User user);

@@ -46,8 +46,8 @@
 
 <script src="js/mancala-object.js"></script>
 <script>
-    mancalaObject.userID = "${userID}";
-    mancalaObject.gameID = "${gameID}";
+    mancalaObject.userId = "${userId}";
+    mancalaObject.gameId = "${gameId}";
 </script>
 
 </t:generic-page>

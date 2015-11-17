@@ -1,7 +1,7 @@
 
 mancalaObject = {
-    userID: "",
-    gameID: "",
+    userId: "",
+    gameId: "",
     isInTurn: false,
     isHost: false,
     state: []

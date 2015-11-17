@@ -1,4 +1,4 @@
-package com.tinygames.mancala.models;
+package com.tinygames.mancala.domain;
 
 import java.io.Serializable;
 
@@ -8,14 +8,12 @@ public class Game implements Serializable {
     private String guest;
     private int[] state;
     private String playerInTurn;
-
-//    public Game() {
-//        this.state = new int[] {6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0};
-//    }
+    private String winner;
+    private static final int[] initialState = new int[] {6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0};
 
     public Game(String id) {
         this.id = id;
-        this.state = new int[] {6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0};
+        this.state = initialState;
     }
 
     public String getId() {
@@ -32,9 +30,6 @@ public class Game implements Serializable {
 
     public void setHost(String host) {
         this.host = host;
-//        if (this.playerInTurn == null) {
-//            this.playerInTurn = this.host;
-//        }
     }
 
     public String getGuest() {
@@ -59,5 +54,13 @@ public class Game implements Serializable {
 
     public void setPlayerInTurn(String playerInTurn) {
         this.playerInTurn = playerInTurn;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
     }
 }

@@ -1,4 +1,4 @@
-package com.tinygames.mancala.models;
+package com.tinygames.mancala.domain;
 
 import java.io.Serializable;
 

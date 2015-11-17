@@ -20,7 +20,7 @@ var updateGame = function(game) {
 };
 
 var getGameState = function() {
-    $.get(env + "games/" + mancalaObject.gameID,
+    $.get(env + "games/" + mancalaObject.gameId,
         function (result) {
             if (isStateChanged(result.state)) {
                 updateGame(result);
@@ -44,9 +44,6 @@ var updateBoard = function() {
     var n = $(".own-pit").size();
 
     for (var i = 1; i <= n; i++) {
-        //$("#own-pit" + i).text(state[i - 1]);
-        //$("#opp-pit" + i).text(state[i + n]);
-
         updateStones("#own-pit" + i, state[i - 1], ".own-pit");
         updateStones("#opp-pit" + i, state[i + n], ".pit");
     }
@@ -85,17 +82,18 @@ var removeStone = function(pit) {
     $(pit).children()[0].remove();
 };
 
-
-var stoneColors = ["#2ecc71", "#3498db", "#f1c40f", "#e67e22", "#e74c3c", "#9b59b6", "#34495e"];
-
 var setStonePositionAndColor = function(pit, stone) {
     var height = $(pit).height();
     var width = $(pit).width();
     var top = height/4 + getRandomNumber(height/3);
     var left = width/4 + getRandomNumber(width/3);
-    var color = stoneColors[getRandomNumber(stoneColors.length) - 1];
-
+    var color = getRandomColor();
     $(stone).css({top: top, left: left, background: color});
+};
+
+var getRandomColor = function() {
+    var stoneColors = ["#1abc9c", "#2ecc71", "#3498db", "#f1c40f", "#e67e22", "#e74c3c", "#9b59b6", "#34495e"];
+    return stoneColors[getRandomNumber(stoneColors.length) - 1];
 };
 
 var getRandomNumber = function(n) {
@@ -126,7 +124,7 @@ var getUserGameState = function() {
 
 var updateMancalaObject = function(game) {
     mancalaObject.state = game.state;
-    mancalaObject.isInTurn = game.playerInTurn === mancalaObject.userID;
+    mancalaObject.isInTurn = game.playerInTurn === mancalaObject.userId;
 };
 
 $("#play-btn").click(function() {
@@ -153,8 +151,8 @@ $(".own-pit").click(function (event){
     }
 
     var pit = getPit(stones);
-    $.post(env + "games/" + mancalaObject.gameID + "/move/" + pit,
-        {userID: mancalaObject.userID},
+    $.post(env + "games/" + mancalaObject.gameId + "/move/" + pit,
+        {userId: mancalaObject.userId},
         function(result){
             updateGame(result);
     });
@@ -164,10 +162,10 @@ $(".own-pit").click(function (event){
 if (typeof mancalaObject !== 'undefined') {
     $.ajax({
         type: "POST",
-        url: env + "games/" + mancalaObject.gameID + "/add/" + mancalaObject.userID,
+        url: env + "games/" + mancalaObject.gameId + "/add/" + mancalaObject.userId,
         success: function (result) {
             updateGame(result);
-            mancalaObject.isHost = mancalaObject.userID == result.host;
+            mancalaObject.isHost = mancalaObject.userId == result.host;
         },
         error: function (result) {
             $("#error-msg")
