@@ -2,18 +2,16 @@ package com.tinygames.mancala.domain;
 
 import java.io.Serializable;
 
-public class Game implements Serializable {
+public class GameEntity implements Serializable {
     private String id;
     private String host;
     private String guest;
     private int[] state;
     private String playerInTurn;
     private String winner;
-    private static final int[] initialState = new int[] {6, 6, 6, 6, 6, 6, 0, 6, 6, 6, 6, 6, 6, 0};
 
-    public Game(String id) {
-        this.id = id;
-        this.state = initialState;
+    public GameEntity() {
+
     }
 
     public String getId() {

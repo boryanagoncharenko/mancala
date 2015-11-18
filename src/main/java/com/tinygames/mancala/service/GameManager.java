@@ -1,12 +1,12 @@
 package com.tinygames.mancala.service;
 
-import com.tinygames.mancala.domain.Game;
+import com.tinygames.mancala.domain.GameEntity;
 
 public interface GameManager {
-    Game createGame();
-    Game retrieveGame(String gameId);
-    Game addUser(String gameId, String userId);
-    Game makeMove(String gameId, String userId, int pit);
-    boolean isMoveLegal(Game game, String userId, int pit);
-    Game executeMove(String user, int pit, Game game);
+    GameEntity createGame();
+    GameEntity retrieveGame(String gameId);
+    GameEntity addUser(String gameId, String userId);
+    GameEntity makeMove(String gameId, String userId, int pit);
+    boolean isMoveLegal(GameEntity game, String userId, int pit);
+    GameEntity executeMove(String user, int pit, GameEntity game);
 }

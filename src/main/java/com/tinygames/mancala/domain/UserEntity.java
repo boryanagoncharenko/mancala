@@ -2,15 +2,11 @@ package com.tinygames.mancala.domain;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class UserEntity implements Serializable {
     private String id;
 
-    public User() {
+    public UserEntity() {
 
-    }
-
-    public User(String id) {
-        this.id = id;
     }
 
     public String getId() {

@@ -25,7 +25,7 @@ var getGameState = function() {
             if (isStateChanged(result.state)) {
                 updateGame(result);
             } else {
-                setTimeout(getGameState, 5000);
+                setTimeout(getGameState, 1000);
             }
         });
 };
@@ -72,7 +72,6 @@ var adjustStones = function(pit, number) {
 };
 
 var addStone = function(pit) {
-    console.log(pit);
     var stone = $("<span class=\"stone\"></span>");
     setStonePositionAndColor(pit, stone);
     $(pit).append(stone);
@@ -132,6 +131,7 @@ $("#play-btn").click(function() {
         type: "POST",
         url: env + "games",
         success: function (result) {
+            console.log(result);
             window.location = env + result.id;
         },
         error: function (result) {

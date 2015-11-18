@@ -1,6 +1,6 @@
 package com.tinygames.mancala.repository;
 
-import com.tinygames.mancala.domain.User;
+import com.tinygames.mancala.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,11 +13,11 @@ public class UserDaoImpl implements UserDao
     @Autowired
     protected RedisTemplate<String, String> template;
 
-    public void create(User user) {
+    public void create(UserEntity user) {
         this.template.opsForHash().put(OBJECT_KEY, user.getId(), user);
     }
 
-    public User retrieve(String inst_key) {
-        return (User) this.template.opsForHash().get(OBJECT_KEY, inst_key);
+    public UserEntity retrieve(String inst_key) {
+        return (UserEntity) this.template.opsForHash().get(OBJECT_KEY, inst_key);
     }
 }
