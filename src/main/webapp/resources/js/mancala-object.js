@@ -4,5 +4,7 @@ mancalaObject = {
     gameId: "",
     isInTurn: false,
     isHost: false,
-    state: []
+    state: [],
+    isGameOver: false,
+    isWinner: false
 };

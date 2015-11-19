@@ -10,7 +10,7 @@ import java.util.UUID;
 @Service
 public class GameManagerImpl implements GameManager {
 
-    private final int[] initialState = new int[] {4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
+    private final int[] initialState = new int[] {4, 4, 4, 4, 4, 4, 0, 0,0,0,0,0, 1, 0};
 
     @Autowired
     private GameDao dao;
@@ -75,19 +75,70 @@ public class GameManagerImpl implements GameManager {
         int lastIndex = this.distributeStones(board, pit, opponentKalahIndex);
         game.setState(board);
 
+        String next = this.getOpponentId(user, game);
         if (lastIndex == kalahIndex) {
-            game.setPlayerInTurn(user);
-            return game;
+            next = user;
+        }
+        else if (this.isStoneCapturing(lastIndex, kalahIndex, board)) {
+            this.captureStones(lastIndex, kalahIndex, board);
         }
 
-        if (board[lastIndex] == 1 && board[12 - lastIndex] > 0) {
-            board[kalahIndex] += board[lastIndex] + board[12 - lastIndex];
-            board[lastIndex] = 0;
-            board[12 - lastIndex] = 0;
+        if (this.isGameOver(board)) {
+            String winner = user;
+            if (board[kalahIndex] < board[opponentKalahIndex]) {
+                winner = this.getOpponentId(user, game);
+            }
+            game.setWinner(winner);
         }
-        game.setPlayerInTurn(this.getOpponentId(user, game));
+        else {
+            game.setPlayerInTurn(next);
+        }
 
         return game;
+    }
+
+    private boolean isStoneCapturing(int lastIndex, int kalahIndex, int[] board) {
+        return lastIndex >= kalahIndex - 6 && // The stone lands on the player's pits
+                board[lastIndex] == 1 && // The pit was empty
+                board[12 - lastIndex] > 0; // The opposite pit is not empty
+    }
+
+    private void captureStones(int lastIndex, int kalahIndex, int[] board) {
+        board[kalahIndex] += board[lastIndex] + board[12 - lastIndex];
+        board[lastIndex] = 0;
+        board[12 - lastIndex] = 0;
+    }
+
+    private void setWinner() {
+
+    }
+
+    private boolean isGameOver(int[] board) {
+        if (this.isSideEmpty(board, 0)) {
+            this.emptySide(board, 7);
+            return true;
+        }
+        if (this.isSideEmpty(board, 7)) {
+            this.emptySide(board, 0);
+            return true;
+        }
+        return false;
+    }
+
+    private void emptySide(int[] board, int offset) {
+        for (int i = 0; i < 6; i++) {
+            board[offset + 6] += board[i+offset];
+            board[i+offset] = 0;
+        }
+    }
+
+    private boolean isSideEmpty(int[] board, int offset) {
+        for (int i = offset; i < 6 + offset; i++) {
+            if (board[i] > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int distributeStones(int[] board, int pit, int oppKalah) {

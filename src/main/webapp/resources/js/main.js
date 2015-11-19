@@ -41,6 +41,7 @@ var isStateChanged = function(newState) {
 
 var updateBoard = function() {
     var state = getUserGameState();
+    console.log("User state is" + state);
     var n = $(".own-pit").size();
 
     for (var i = 1; i <= n; i++) {
@@ -101,7 +102,11 @@ var getRandomNumber = function(n) {
 
 var updateStatus = function() {
     var status = "Opponent's turn";
-    if (mancalaObject.isInTurn === true) {
+
+    if (mancalaObject.isGameOver) {
+        status = mancalaObject.isWinner ? "You win" : "You lose";
+    }
+    else if (mancalaObject.isInTurn === true) {
         status = "Your turn";
     }
     $("#game-status").text(status);
@@ -109,6 +114,7 @@ var updateStatus = function() {
 
 var getUserGameState = function() {
     var state = mancalaObject.state.slice();
+    console.log("User host: " + mancalaObject.isHost);
     if (!mancalaObject.isHost) {
         var offset = 7;
         for (i = 0; i < offset; i++) {
@@ -122,6 +128,10 @@ var getUserGameState = function() {
 };
 
 var updateMancalaObject = function(game) {
+    mancalaObject.isGameOver = typeof game.winner !== 'undefined';
+    if (mancalaObject.isGameOver) {
+        mancalaObject.isWinner = mancalaObject.userId === game.winner;
+    }
     mancalaObject.state = game.state;
     mancalaObject.isInTurn = game.playerInTurn === mancalaObject.userId;
 };
@@ -169,8 +179,8 @@ if (typeof mancalaObject !== 'undefined') {
         type: "POST",
         url: env + "games/" + mancalaObject.gameId + "/add/" + mancalaObject.userId,
         success: function (result) {
-            updateGame(result);
             mancalaObject.isHost = mancalaObject.userId == result.host;
+            updateGame(result);
         },
         error: function (result) {
             $("#error-msg")

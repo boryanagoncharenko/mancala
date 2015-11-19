@@ -1,7 +1,7 @@
 package com.tinygames.mancala.service;
 
 public class Board {
-    private final int[] initialState = new int[] {4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
+    private final int[] initialState = new int[] {4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 1, 0};
     private int[] state;
 
     public Board() {
