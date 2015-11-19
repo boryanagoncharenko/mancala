@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <t:generic-page>
-
 <div class="board-container">
 <div id="game-status" class="lead">Opponent's turn</div>
     <table class="board">
@@ -42,6 +41,7 @@
         </tr>
         </tbody>
     </table>
+    <button id="leave-game-btn" class="btn btn-primary btn-lg">Leave</button>
 </div>
 
 <script src="js/mancala-object.js"></script>

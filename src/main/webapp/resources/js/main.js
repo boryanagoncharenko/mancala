@@ -144,6 +144,11 @@ $("#play-btn").click(function() {
     return false;
 });
 
+$("#leave-game-btn").click(function() {
+    window.location = env;
+    return false;
+});
+
 $(".own-pit").click(function (event){
     var stones = $(this).siblings(".stones-count")[0];
     if (!mancalaObject.isInTurn || stones.innerText == 0) {
