@@ -1,6 +1,6 @@
 package com.tinygames.mancala.service;
 
-import com.tinygames.mancala.domain.UserEntity;
+import com.tinygames.mancala.domain.User;
 import com.tinygames.mancala.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,14 @@ public class UserManagerImpl implements UserManager {
     @Autowired
     private UserDao dao;
 
-    public UserEntity createUser() {
+    public User createUser() {
         String uniqueId = UUID.randomUUID().toString();
-        UserEntity user = new UserEntity();
-        user.setId(uniqueId);
+        User user = new User(uniqueId);
         this.dao.create(user);
         return user;
+    }
+
+    public User retrieveUser(String userId) {
+        return this.dao.retrieve(userId);
     }
 }

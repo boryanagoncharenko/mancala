@@ -1,6 +1,6 @@
 package com.tinygames.mancala.controllers;
 
-import com.tinygames.mancala.domain.UserEntity;
+import com.tinygames.mancala.domain.User;
 import com.tinygames.mancala.service.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ public class UserController {
     private UserManager userManager;
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public UserEntity createUser() {
+    public User createUser() {
         return this.userManager.createUser();
     }
 }

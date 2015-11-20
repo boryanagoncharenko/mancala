@@ -1,7 +1,8 @@
 package com.tinygames.mancala.service;
 
-import com.tinygames.mancala.domain.UserEntity;
+import com.tinygames.mancala.domain.User;
 
 public interface UserManager {
-    UserEntity createUser();
+    User createUser();
+    User retrieveUser(String id);
 }

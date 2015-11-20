@@ -1,8 +1,8 @@
 package com.tinygames.mancala.repository;
 
-import com.tinygames.mancala.domain.UserEntity;
+import com.tinygames.mancala.domain.User;
 
 public interface UserDao {
-    void create(UserEntity user);
-    UserEntity retrieve(String id);
+    void create(User user);
+    User retrieve(String id);
 }

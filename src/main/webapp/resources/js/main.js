@@ -22,7 +22,7 @@ var updateGame = function(game) {
 var getGameState = function() {
     $.get(env + "games/" + mancalaObject.gameId,
         function (result) {
-            if (isStateChanged(result.state)) {
+            if (isStateChanged(result.board.state)) {
                 updateGame(result);
             } else {
                 setTimeout(getGameState, 1000);
@@ -41,7 +41,6 @@ var isStateChanged = function(newState) {
 
 var updateBoard = function() {
     var state = getUserGameState();
-    console.log("User state is" + state);
     var n = $(".own-pit").size();
 
     for (var i = 1; i <= n; i++) {
@@ -114,7 +113,6 @@ var updateStatus = function() {
 
 var getUserGameState = function() {
     var state = mancalaObject.state.slice();
-    console.log("User host: " + mancalaObject.isHost);
     if (!mancalaObject.isHost) {
         var offset = 7;
         for (i = 0; i < offset; i++) {
@@ -128,12 +126,14 @@ var getUserGameState = function() {
 };
 
 var updateMancalaObject = function(game) {
-    mancalaObject.isGameOver = typeof game.winner !== 'undefined';
+    mancalaObject.isGameOver = game.winner !== null;
     if (mancalaObject.isGameOver) {
-        mancalaObject.isWinner = mancalaObject.userId === game.winner;
+        mancalaObject.isWinner = (game.winner === "HOST" && mancalaObject.isHost) ||
+        (game.winner === "GUEST" && !mancalaObject.isHost);
     }
-    mancalaObject.state = game.state;
-    mancalaObject.isInTurn = game.playerInTurn === mancalaObject.userId;
+    mancalaObject.state = game.board.state;
+    mancalaObject.isInTurn = (game.playerInTurn === "HOST" && mancalaObject.isHost) ||
+        (game.playerInTurn === "GUEST" && !mancalaObject.isHost);
 };
 
 $("#play-btn").click(function() {
@@ -141,7 +141,6 @@ $("#play-btn").click(function() {
         type: "POST",
         url: env + "games",
         success: function (result) {
-            console.log(result);
             window.location = env + result.id;
         },
         error: function (result) {
@@ -179,7 +178,8 @@ if (typeof mancalaObject !== 'undefined') {
         type: "POST",
         url: env + "games/" + mancalaObject.gameId + "/add/" + mancalaObject.userId,
         success: function (result) {
-            mancalaObject.isHost = mancalaObject.userId == result.host;
+            mancalaObject.isHost = mancalaObject.userId == result.host.id;
+            console.log(result);
             updateGame(result);
         },
         error: function (result) {
