@@ -15,6 +15,12 @@ public class Game implements Serializable {
         this.board = new Board();
     }
 
+    public Game(String id, Board board)
+    {
+        this(id);
+        this.board = board;
+    }
+
     public String getId() {
         return this.id;
     }
@@ -41,9 +47,7 @@ public class Game implements Serializable {
 
     public boolean tryAddUser(User user) {
         if (this.tryAddHost(user) || this.tryAddGuest(user)) {
-            if (this.inTurn == null) {
-                this.inTurn = Player.GUEST;
-            }
+            this.updateInTurn();
             return true;
         }
         return false;
@@ -51,37 +55,35 @@ public class Game implements Serializable {
 
     public boolean isMoveLegal(User user, int pit) {
         return this.isPlayerInTurn(user) &&
-                this.board.isPitEmpty(pit) &&
-                this.isUserAllowedToMovePit(user, pit);
+               !this.board.isPitEmpty(pit) &&
+               this.isUserAllowedToMovePit(user, pit);
     }
 
     public void makeMove(User user, int pit) {
         Player player = this.userToPlayer(user);
-        MoveResult result = this.board.executeMove(pit, player);
+        MoveResult result = this.board.executeMove(pit);
         if (result.isGameOver()) {
-            int hostResult = this.board.getStonesInPit(this.board.getUserKalah(Player.HOST));
-            int guestResult = this.board.getStonesInPit(this.board.getUserKalah(Player.GUEST));
-            this.winner = guestResult >= hostResult ? Player.GUEST : Player.HOST;
+            this.setWinner();
         }
-        else {
-            if (result.getLastUpdatedPit() != this.board.getUserKalah(player)) {
-                this.inTurn = this.inTurn.getOpposite();
-            }
+        else if (result.getLastUpdatedPit() != this.board.getUserKalah(player)) {
+            this.inTurn = this.inTurn.getOpposite();
         }
     }
 
     private boolean tryAddHost(User user) {
         if (this.host == null) {
             this.host = user;
+            return true;
         }
-        return this.host != null;
+        return false;
     }
 
     private boolean tryAddGuest(User user) {
         if (!this.host.equals(user) && this.guest == null) {
             this.guest = user;
+            return true;
         }
-        return this.guest != null;
+        return false;
     }
 
     private boolean isUserAllowedToMovePit(User user, int pit) {
@@ -99,5 +101,20 @@ public class Game implements Serializable {
             return Player.HOST;
         }
         return Player.GUEST;
+    }
+
+    private void updateInTurn() {
+        if (this.inTurn == null && this.guest != null) {
+            this.inTurn = Player.GUEST;
+        }
+    }
+
+    private void setWinner() {
+        int hostResult = this.board.getScore(Player.HOST);
+        int guestResult = this.board.getScore(Player.GUEST);
+        this.winner = Player.GUEST;
+        if (hostResult > guestResult) {
+            this.winner = Player.HOST;
+        }
     }
 }

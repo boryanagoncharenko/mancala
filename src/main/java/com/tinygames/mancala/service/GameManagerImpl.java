@@ -1,8 +1,6 @@
 package com.tinygames.mancala.service;
 
-import com.tinygames.mancala.domain.Board;
 import com.tinygames.mancala.domain.Game;
-import com.tinygames.mancala.domain.Player;
 import com.tinygames.mancala.domain.User;
 import com.tinygames.mancala.repository.GameDao;
 import org.springframework.beans.factory.annotation.Autowired;

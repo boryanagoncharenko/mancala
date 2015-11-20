@@ -1,4 +1,4 @@
-package com.tinygames.mancala;
+package com.tinygames.mancala.controllers;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration("file:src/main/webapp/WEB-INF/mvc-dispatcher-servlet.xml")
-public class AppTests {
+public class MainControllerTests {
     private MockMvc mockMvc;
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
@@ -31,9 +31,16 @@ public class AppTests {
     }
 
     @Test
-    public void simple() throws Exception {
+    public void index() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("hello"));
+                .andExpect(view().name("index"));
+    }
+
+    @Test
+    public void play() throws Exception {
+        mockMvc.perform(get("/gameID"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("game"));
     }
 }
