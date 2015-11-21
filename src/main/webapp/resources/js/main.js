@@ -1,4 +1,4 @@
-var env = "http://localhost:8080/";
+var env = "http://www.mancala.xyz/";
 
 
 var getPit = function(element) {
@@ -132,8 +132,8 @@ var updateMancalaObject = function(game) {
         (game.winner === "GUEST" && !mancalaObject.isHost);
     }
     mancalaObject.state = game.board.state;
-    mancalaObject.isInTurn = (game.playerInTurn === "HOST" && mancalaObject.isHost) ||
-        (game.playerInTurn === "GUEST" && !mancalaObject.isHost);
+    mancalaObject.isInTurn = (game.inTurn === "HOST" && mancalaObject.isHost) ||
+        (game.inTurn === "GUEST" && !mancalaObject.isHost);
 };
 
 $("#play-btn").click(function() {
@@ -179,7 +179,6 @@ if (typeof mancalaObject !== 'undefined') {
         url: env + "games/" + mancalaObject.gameId + "/add/" + mancalaObject.userId,
         success: function (result) {
             mancalaObject.isHost = mancalaObject.userId == result.host.id;
-            console.log(result);
             updateGame(result);
         },
         error: function (result) {

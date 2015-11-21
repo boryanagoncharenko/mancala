@@ -26,7 +26,7 @@ public class SessionManagerImpl implements SessionManager{
 
     private String requestUserId() {
         Client client = Client.create();
-        String env = "http://localhost:8080/";
+        String env = "http://www.mancala.xyz:8080/";
         WebResource webResource = client.resource(env + "users");
         ClientResponse response = webResource.accept("application/json")
                 .post(ClientResponse.class);

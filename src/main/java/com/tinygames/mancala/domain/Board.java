@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 public class Board implements Serializable {
-    public static final int[] initialState = new int[] {4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 1, 0};
+    public static final int[] initialState = new int[] {4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0};
     public static final int allPits = 14;
     public static final int allPlayPits = allPits - 2;
     public static final int playerOffset = allPits / 2;
