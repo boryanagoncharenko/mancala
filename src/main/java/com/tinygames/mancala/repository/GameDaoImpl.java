@@ -2,15 +2,17 @@ package com.tinygames.mancala.repository;
 
 import com.tinygames.mancala.domain.Game;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class GameDaoImpl implements GameDao {
     private static final String OBJECT_KEY = "GAME";
-
+    
+    @Qualifier("redisTemplateGame")
     @Autowired
-    protected RedisTemplate<String, String> template;
+    protected RedisTemplate<String, Game> template;
 
     @Override
     public void create(Game game) {

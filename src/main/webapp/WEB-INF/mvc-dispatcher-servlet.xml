@@ -22,12 +22,35 @@
 
     <bean id="stringSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
 
-    <bean id="redisTemplate"
-          class="org.springframework.data.redis.core.RedisTemplate" p:connectionFactory-ref="jedisConnFactory">
-        <property name="keySerializer" ref="stringSerializer"/>
-        <property name="valueSerializer" ref="stringSerializer"/>
-        <property name="hashKeySerializer" ref="stringSerializer"/>
+    <bean id="redisTemplateUser"
+          class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisConnFactory"
+          p:keySerializer-ref="stringSerializer"
+          p:hashKeySerializer-ref="stringSerializer"
+          p:valueSerializer-ref="userJsonRedisSerializer"/>
+
+    <bean id="redisTemplateGame"
+          class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisConnFactory"
+          p:keySerializer-ref="stringSerializer"
+          p:hashKeySerializer-ref="stringSerializer"
+          />
+
+    <bean id="gameJsonRedisSerializer" class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+        <constructor-arg type="java.lang.Class" value="com.tinygames.mancala.domain.Game"/>
     </bean>
+
+    <bean id="userJsonRedisSerializer" class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+        <constructor-arg type="java.lang.Class" value="com.tinygames.mancala.domain.User"/>
+    </bean>
+
+    <!--<bean id="userDao" class="com.tinygames.mancala.repository.UserDaoImpl">-->
+        <!--<property name="template" ref="redisTemplateUser"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="gameDao" class="com.tinygames.mancala.repository.GameDaoImpl">-->
+        <!--<property name="template" ref="redisTemplateGame"/>-->
+    <!--</bean>-->
 
     <mvc:annotation-driven />
     <mvc:resources mapping="/js/**" location="/resources/js/" />
