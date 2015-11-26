@@ -44,14 +44,6 @@
         <constructor-arg type="java.lang.Class" value="com.tinygames.mancala.domain.User"/>
     </bean>
 
-    <!--<bean id="userDao" class="com.tinygames.mancala.repository.UserDaoImpl">-->
-        <!--<property name="template" ref="redisTemplateUser"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="gameDao" class="com.tinygames.mancala.repository.GameDaoImpl">-->
-        <!--<property name="template" ref="redisTemplateGame"/>-->
-    <!--</bean>-->
-
     <mvc:annotation-driven />
     <mvc:resources mapping="/js/**" location="/resources/js/" />
     <mvc:resources mapping="/css/**" location="/resources/css/" />

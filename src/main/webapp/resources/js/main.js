@@ -1,5 +1,5 @@
 var env = "http://www.mancala.xyz/";
-
+var stoneColors = ["#1abc9c", "#2ecc71", "#3498db", "#f1c40f", "#e67e22", "#e74c3c", "#9b59b6", "#34495e"];
 
 var getPit = function(element) {
     var pit = parseInt(element.id.slice(-1)) - 1;
@@ -23,6 +23,7 @@ var getGameState = function() {
     $.get(env + "games/" + mancalaObject.gameId,
         function (result) {
             if (isStateChanged(result.board.state)) {
+                console.log(result);
                 updateGame(result);
             } else {
                 setTimeout(getGameState, 1000);
@@ -54,14 +55,14 @@ var updateBoard = function() {
 
 var updateStones = function(pitId, newValue, pitClass) {
     var stonesCount = $(pitId);
-    $(stonesCount).text(newValue);
+    stonesCount.text(newValue);
 
-    var pit = stonesCount.siblings(pitClass)[0];
+    var pit = $(stonesCount.siblings(pitClass)[0]);
     adjustStones(pit, newValue);
 };
 
 var adjustStones = function(pit, number) {
-    var currentNumber = $(pit).children().length;
+    var currentNumber = pit.children().length;
     var action = addStone;
     if (currentNumber > number) {
         action = removeStone;
@@ -72,26 +73,26 @@ var adjustStones = function(pit, number) {
 };
 
 var addStone = function(pit) {
-    var stone = $("<span class=\"stone\"></span>");
+    var stone = $("<span>").addClass("stone");
+    //var stone = $("<span class=\"stone\"></span>");
     setStonePositionAndColor(pit, stone);
-    $(pit).append(stone);
+    pit.append(stone);
 };
 
 var removeStone = function(pit) {
-    $(pit).children()[0].remove();
+    pit.children()[0].remove();
 };
 
 var setStonePositionAndColor = function(pit, stone) {
-    var height = $(pit).height();
-    var width = $(pit).width();
+    var height = pit.height();
+    var width = pit.width();
     var top = height/4 + getRandomNumber(height/3);
     var left = width/4 + getRandomNumber(width/3);
     var color = getRandomColor();
-    $(stone).css({top: top, left: left, background: color});
+    stone.css({top: top, left: left, background: color});
 };
 
 var getRandomColor = function() {
-    var stoneColors = ["#1abc9c", "#2ecc71", "#3498db", "#f1c40f", "#e67e22", "#e74c3c", "#9b59b6", "#34495e"];
     return stoneColors[getRandomNumber(stoneColors.length) - 1];
 };
 
@@ -178,6 +179,7 @@ if (typeof mancalaObject !== 'undefined') {
         type: "POST",
         url: env + "games/" + mancalaObject.gameId + "/add/" + mancalaObject.userId,
         success: function (result) {
+            console.log(result);
             mancalaObject.isHost = mancalaObject.userId == result.host.id;
             updateGame(result);
         },
